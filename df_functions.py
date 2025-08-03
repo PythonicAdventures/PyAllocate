@@ -37,19 +37,37 @@ def process_excel_file(file_path):
     
 
 def process_contrib(df):
-    df_alloc_contrib = (df.pivot_table(index=['fund_name','investor_name', 'classification'],
-                             columns='break_period', values='amount', aggfunc='sum', fill_value=0)
-                    .query('classification != "redemption"')
-                    .reset_index()
-                   )
+    df_alloc_contrib = (df.assign(fund_name=df['fund_name'].fillna('').astype('category'),
+                        sub_group_1=df['sub_group_1'].fillna('').astype('category'),
+                        sub_group_2=df['sub_group_2'].fillna('').astype('category'),
+                        investor_name=df['investor_name'].fillna('').astype('category'),
+                        amount=df['amount'].astype(float).fillna(0),
+                        break_period=pd.to_datetime(df['break_period']).dt.strftime("%m/%d/%Y"),
+                        classification=df['classification'].fillna('').astype('category')
+                        )
+                        .pivot_table(index=['fund_name', 'investor_name', 'sub_group_1', 'sub_group_2', 'classification'],
+                                    columns='break_period', values='amount', aggfunc='sum', fill_value=0)
+                        .query('classification == "contribution"')
+                        .reset_index()
+                )
+    
     return df_alloc_contrib
 
 def process_reds(df):   
-    df_alloc_red = (df.pivot_table(index=['fund_name','investor_name', 'classification'],
+    df_alloc_red = (df.assign(fund_name=df['fund_name'].fillna('').astype('category'),
+                          sub_group_1=df['sub_group_1'].fillna('').astype('category'),
+                          sub_group_2=df['sub_group_2'].fillna('').astype('category'),
+                          investor_name=df['investor_name'].fillna('').astype('category'),
+                          amount=df['amount'].astype(float).fillna(0),
+                          break_period=pd.to_datetime(df['break_period']).dt.strftime("%m/%d/%Y"),
+                          classification=df['classification'].fillna('').astype('category')
+                          )
+                    .pivot_table(index=['fund_name', 'investor_name', 'sub_group_1', 'sub_group_2', 'classification'],
                                 columns='break_period', values='amount', aggfunc='sum', fill_value=0)
-                        .query('classification != "contribution"')
-                        .reset_index()
+                    .query('classification == "redemption"')
+                    .reset_index()
                     )
+    
     return df_alloc_red
 
 

@@ -79,7 +79,7 @@ class ExcelViewer:
                        foreground='#000000',  # Black text
                        borderwidth=0,
                        focuscolor='none',
-                       padding=[20, 10],
+                       padding=[40, 7],
                        font=('Segoe UI', 10, 'bold'))  # Bold font
         style.map('Modern.TButton',
                  background=[('active', self.colors['accent_dark']),
@@ -91,7 +91,7 @@ class ExcelViewer:
                        foreground='#000000',  # Black text
                        borderwidth=0,
                        focuscolor='none',
-                       padding=[20, 10],
+                       padding=[20, 7],
                        font=('Segoe UI', 10, 'bold'))  # Bold font
         style.map('Quit.TButton',
                  background=[('active', '#c0392b'),
